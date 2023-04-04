@@ -55,6 +55,7 @@ namespace EcommAPI.Service.Category
                 var result = Global.ExecuteStoredProcedure("sp_create_category", param, _unitOfWork.GetConnection());
                 err_no = (int)param.Find(x => x.ParameterName == "@err_no")?.Value;
                 err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
+                
                 if (err_no == 0)
                 {
                     response.Status = true;

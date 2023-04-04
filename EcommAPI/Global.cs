@@ -33,6 +33,8 @@ namespace EcommAPI
         {
             public static string Pending = "P";
             public static string Deliverd = "D";
+            public static string Open = "O";
+            public static string Close = "C";
         }
         #endregion
 
@@ -142,5 +144,7 @@ namespace EcommAPI
             }
         }
         #endregion
+
+
     }
 }

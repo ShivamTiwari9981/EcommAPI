@@ -44,15 +44,14 @@ namespace EcommAPI.Service
                 var param = new List<SqlParameter>();
                 param.Add(new SqlParameter("@firstName",model.FirstName));
                 param.Add(new SqlParameter("@lastName", model.LastName));
-                param.Add(new SqlParameter("@password", model.Password));
+                param.Add(new SqlParameter("@password", model.UserPassword));
                 param.Add(new SqlParameter("@email", model.Email));
-                param.Add(new SqlParameter("@fund", 0));
                 param.Add(new SqlParameter("@type", Global.UserType.User));
-                param.Add(new SqlParameter("@status", Global.Status.Pending));
-                param.Add(new SqlParameter("@err_no", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
+                param.Add(new SqlParameter("@status", Global.Status.Open));
+                param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
                 param.Add(new SqlParameter("@errMsg", SqlDbType.VarChar, 200, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_msg));
                 var result = Global.ExecuteStoredProcedure("sp_register_user", param, _unitOfWork.GetConnection());
-                err_no = (int)param.Find(x => x.ParameterName == "@err_no")?.Value;
+                err_no = (int)param.Find(x => x.ParameterName == "@errNo")?.Value;
                 err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
                 if (err_no == 0)
                 {
@@ -99,7 +98,7 @@ namespace EcommAPI.Service
                 var param = new List<SqlParameter>();
                 param.Add(new SqlParameter("@firstName", model.FirstName));
                 param.Add(new SqlParameter("@lastName", model.LastName));
-                param.Add(new SqlParameter("@password", model.Password));
+                param.Add(new SqlParameter("@password", model.UserPassword));
                 param.Add(new SqlParameter("@email", model.Email));
                 param.Add(new SqlParameter("@err_no", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
                 param.Add(new SqlParameter("@errMsg", SqlDbType.VarChar, 200, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_msg));

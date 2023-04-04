@@ -1,5 +1,6 @@
 ﻿using EcommAPI.Model;
 using EcommAPI.Service.Category;
+using EcommAPI.Service.Image;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +11,12 @@ namespace EcommAPI.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        public CategoryController()
+        private readonly IImageService _ImageService;
+        public CategoryController(IImageService ImageService)
         {
             _categoryService=new CategoryService();
+            _ImageService=ImageService;
         }
-        //public CategoryController(ICategoryService categoryService)
-        //{
-        //    this._categoryService = categoryService;
-        //}
 
         [Route("getAllCategory")]
         [HttpGet]
@@ -35,11 +34,15 @@ namespace EcommAPI.Controllers
         }
         [Route("category")]
         [HttpPost]
-        public ActionResult Category(CategoryModel model)
+        public ActionResult Category([FromForm]CategoryModel model)
         {
             try
             {
                 ResponseModel responseModel=_categoryService.AddCategory(model);
+                if(responseModel.Status)
+                {
+                    responseModel= _ImageService.SaveImage(model.ImageFile, model.ImageUrl);
+                }
                 return Ok(responseModel);
             }
             catch (Exception ex)
@@ -47,5 +50,8 @@ namespace EcommAPI.Controllers
                 throw ex;
             }
         }
+
+
+
     }
 }

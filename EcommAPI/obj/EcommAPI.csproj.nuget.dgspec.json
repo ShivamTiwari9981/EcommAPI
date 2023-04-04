@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitProject\\Ecomm\\EcommAPI\\EcommAPI\\EcommAPI.csproj": {}
+    "D:\\Angular\\Ecom\\EcommAPI\\EcommAPI\\EcommAPI.csproj": {}
   },
   "projects": {
-    "D:\\GitProject\\Ecomm\\EcommAPI\\EcommAPI\\EcommAPI.csproj": {
+    "D:\\Angular\\Ecom\\EcommAPI\\EcommAPI\\EcommAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitProject\\Ecomm\\EcommAPI\\EcommAPI\\EcommAPI.csproj",
+        "projectUniqueName": "D:\\Angular\\Ecom\\EcommAPI\\EcommAPI\\EcommAPI.csproj",
         "projectName": "EcommAPI",
-        "projectPath": "D:\\GitProject\\Ecomm\\EcommAPI\\EcommAPI\\EcommAPI.csproj",
-        "packagesPath": "C:\\Users\\Akash Computers\\.nuget\\packages\\",
-        "outputPath": "D:\\GitProject\\Ecomm\\EcommAPI\\EcommAPI\\obj\\",
+        "projectPath": "D:\\Angular\\Ecom\\EcommAPI\\EcommAPI\\EcommAPI.csproj",
+        "packagesPath": "C:\\Users\\Shivam\\.nuget\\packages\\",
+        "outputPath": "D:\\Angular\\Ecom\\EcommAPI\\EcommAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Akash Computers\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Shivam\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -84,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

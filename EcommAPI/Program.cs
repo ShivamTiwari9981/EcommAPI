@@ -1,9 +1,21 @@
 using EcommAPI.Service.Category;
+using EcommAPI.Service.Image;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: "AllowOrigin",
+        builder => {
+            builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+        });
+});
+builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -19,7 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowOrigin");
 app.UseAuthorization();
 
 app.MapControllers();

@@ -9,5 +9,6 @@ namespace EcommAPI.Model
         public string CategoryName { get; set; }
         [Required]
         public string ImageUrl { get; set; }
+        public IFormFile ImageFile { get; set; }
     }
 }
