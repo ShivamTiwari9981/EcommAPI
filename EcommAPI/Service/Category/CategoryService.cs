@@ -26,12 +26,12 @@ namespace EcommAPI.Service.Category
                 if (result.Tables.Count>0)
                 {
                    List <CategoryModel>categoryList= Global.CommonMethod.ConvertToList<CategoryModel>(result.Tables[0]);
-                    response.data = categoryList;
-                    response.Status = true;
+                    response.response = categoryList;
+                    response.status = true;
                 }
                 else
                 {
-                    response.Status = false;
+                    response.status = false;
                 }
                 return response;
             }
@@ -58,13 +58,13 @@ namespace EcommAPI.Service.Category
                 
                 if (err_no == 0)
                 {
-                    response.Status = true;
-                    response.Message = err_msg;
+                    response.status = true;
+                    response.message = err_msg;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;
@@ -91,13 +91,13 @@ namespace EcommAPI.Service.Category
                 err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
                 if (err_no == 0)
                 {
-                    response.Status = true;
-                    response.Message = err_msg;
+                    response.status = true;
+                    response.message = err_msg;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;
@@ -122,13 +122,13 @@ namespace EcommAPI.Service.Category
                  
                 if (err_no == 0)
                 {
-                    response.Status = true;
-                    response.Message = err_msg;
+                    response.status = true;
+                    response.message = err_msg;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;

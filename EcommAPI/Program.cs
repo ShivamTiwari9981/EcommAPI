@@ -1,5 +1,6 @@
 using EcommAPI.Service.Category;
 using EcommAPI.Service.Image;
+using EcommAPI.Service.Module;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -16,6 +17,7 @@ builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAppModuleService, AppModuleService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

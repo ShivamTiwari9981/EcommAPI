@@ -42,8 +42,8 @@ namespace EcommAPI.Service.Image
                     {
                         file.CopyTo(fs);
                         fs.Flush();
-                        response.Status = true;
-                        response.Message = "Created Successfull";
+                        response.status = true;
+                        response.message = "Created Successfull";
                     }
                 }
             }

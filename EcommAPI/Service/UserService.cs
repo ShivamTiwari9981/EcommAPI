@@ -55,13 +55,13 @@ namespace EcommAPI.Service
                 err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
                 if (err_no == 0)
                 {
-                    response.Status = true;
-                    response.Message = err_msg;
+                    response.status = true;
+                    response.message = err_msg;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;
@@ -79,8 +79,8 @@ namespace EcommAPI.Service
                 var param = new List<SqlParameter>();
                 param.Add(new SqlParameter("@userId", userId));
                 var result = Global.ExecuteStoredProcedure("sp_view_user", param, _unitOfWork.GetConnection());
-                response.Status = true;
-                response.data = result.Tables[0];
+                response.status = true;
+                response.response = result.Tables[0];
                 return response;
             }
             catch (Exception ex)
@@ -107,13 +107,13 @@ namespace EcommAPI.Service
                 err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
                 if (err_no == 0)
                 {
-                    response.Status = true;
-                    response.Message = err_msg;
+                    response.status = true;
+                    response.message = err_msg;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;
@@ -140,14 +140,14 @@ namespace EcommAPI.Service
                 if (err_no == 0)
                 {
                     var userList = Global.CommonMethod.ConvertToList<UserModel>(result.Tables[0]);
-                    response.Status = true;
-                    response.Message = err_msg;
-                    response.data = userList;
+                    response.status = true;
+                    response.message = err_msg;
+                    response.response = userList;
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = err_msg;
+                    response.status = false;
+                    response.message = err_msg;
 
                 }
                 return response;
