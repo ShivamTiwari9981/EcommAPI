@@ -19,22 +19,11 @@ namespace EcommAPI.Controllers
 
         [Route("login")]
         [HttpPost]
-        public ActionResult Index(LoginModel model)
+        public ActionResult Login(LoginModel model)
         {
             try
             {
-                ResponseModel responseModel = new ResponseModel();
-                int err_no = _userService.Login(model);
-                if (err_no == 0)
-                {
-                    responseModel.Status = true;
-                    responseModel.Message = "Login Successfull";
-                }
-                else
-                {
-                    responseModel.Status = false;
-                    responseModel.Message = "Login failed";
-                }
+                ResponseModel responseModel = _userService.Login(model);
                 return Ok(responseModel);
             }
             catch (Exception ex)

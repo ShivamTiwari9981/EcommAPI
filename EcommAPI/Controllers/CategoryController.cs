@@ -39,7 +39,7 @@ namespace EcommAPI.Controllers
             try
             {
                 ResponseModel responseModel=_categoryService.AddCategory(model);
-                if(responseModel.Status)
+                if(responseModel.status)
                 {
                     responseModel= _ImageService.SaveImage(model.ImageFile, model.ImageUrl);
                 }

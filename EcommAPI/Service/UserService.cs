@@ -16,18 +16,29 @@ namespace EcommAPI.Service
         {
             _unitOfWork = unitOfWork;
         }
-        public int Login(LoginModel model)
+        public ResponseModel Login(LoginModel model)
         {
             try
             {
+                ResponseModel res = new ResponseModel();
                 int err_no = 0;
                 var param = new List<SqlParameter>();
                 param.Add(new SqlParameter("@email", model.Email));
                 param.Add(new SqlParameter("@password", model.Password));
-                param.Add(new SqlParameter("@err_no", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));               
+                param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));               
                 var result = Global.ExecuteStoredProcedure("sp_login_user", param, _unitOfWork.GetConnection());
-                err_no = (int)param.Find(x => x.ParameterName == "@err_no")?.Value;
-                return err_no;
+               var dbResult = Global.CommonMethod.ConvertToList<LoginResponseModel>(result.Tables[0]).FirstOrDefault();
+                if (dbResult!=null)
+                {
+                    res.status = true;
+                    res.response=dbResult;
+                }
+                else
+                {
+                    res.status = false;
+                    res.message = "Login failed";
+                }
+                return res;
             }
             catch (Exception ex)
             {

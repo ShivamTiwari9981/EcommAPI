@@ -29,7 +29,7 @@ namespace EcommAPI.Service.Module
                     var subModules = Global.CommonMethod.ConvertToList<SubModule>(result.Tables[1]);
                     foreach(var m in appModules)
                     {
-                        m.subModules= subModules.FindAll(x=>x.module_id==m.module_id);
+                        m.subModules= subModules.FindAll(x=>x.ModuleId==m.ModuleId);
                     }
                     response.response = appModules;
                     response.status = true;
