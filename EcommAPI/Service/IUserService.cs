@@ -7,6 +7,6 @@ namespace EcommAPI.Service
         ResponseModel Login(LoginModel model);
         ResponseModel Register(UserModel model);
         ResponseModel ViewUser(int userId);
-        ResponseModel UserList();
+        ResponseModel GetAllUser();
     }
 }

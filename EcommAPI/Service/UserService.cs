@@ -53,8 +53,7 @@ namespace EcommAPI.Service
                 string err_msg = "";
                 int err_no = 0;
                 var param = new List<SqlParameter>();
-                param.Add(new SqlParameter("@firstName",model.FirstName));
-                param.Add(new SqlParameter("@lastName", model.LastName));
+                param.Add(new SqlParameter("@firstName",model.FullName));
                 param.Add(new SqlParameter("@password", model.UserPassword));
                 param.Add(new SqlParameter("@email", model.Email));
                 param.Add(new SqlParameter("@type", Global.UserType.User));
@@ -107,8 +106,7 @@ namespace EcommAPI.Service
                 string err_msg = "";
                 int err_no = 0;
                 var param = new List<SqlParameter>();
-                param.Add(new SqlParameter("@firstName", model.FirstName));
-                param.Add(new SqlParameter("@lastName", model.LastName));
+                param.Add(new SqlParameter("@firstName", model.FullName));
                 param.Add(new SqlParameter("@password", model.UserPassword));
                 param.Add(new SqlParameter("@email", model.Email));
                 param.Add(new SqlParameter("@err_no", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
@@ -125,7 +123,6 @@ namespace EcommAPI.Service
                 {
                     response.status = false;
                     response.message = err_msg;
-
                 }
                 return response;
             }
@@ -134,34 +131,30 @@ namespace EcommAPI.Service
                 throw ex;
             }
         }
-        public ResponseModel UserList()
+        public ResponseModel GetAllUser()
         {
             try
             {
-                ResponseModel response = new ResponseModel();
-                string err_msg = "";
+                ResponseModel res = new ResponseModel();
                 int err_no = 0;
                 var param = new List<SqlParameter>();
-                param.Add(new SqlParameter("@err_no", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
-                param.Add(new SqlParameter("@errMsg", SqlDbType.VarChar, 200, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_msg));
+                param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
                 var result = Global.ExecuteStoredProcedure("sp_get_user_list", param, _unitOfWork.GetConnection());
-                err_no = (int)param.Find(x => x.ParameterName == "@err_no")?.Value;
-                err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
-                
+                err_no = (int)param.Find(x => x.ParameterName == "@errNo")?.Value;
                 if (err_no == 0)
                 {
+                    res.status = true;
                     var userList = Global.CommonMethod.ConvertToList<UserModel>(result.Tables[0]);
-                    response.status = true;
-                    response.message = err_msg;
-                    response.response = userList;
+                    int slNo = 1;
+                    userList.ForEach(x=>x.slNo= slNo++);
+                    res.response = userList;
+
                 }
                 else
                 {
-                    response.status = false;
-                    response.message = err_msg;
-
+                    res.status = false;
                 }
-                return response;
+                return res;
             }
             catch (Exception ex)
             {
