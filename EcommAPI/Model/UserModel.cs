@@ -10,5 +10,6 @@
         public string Image { get; set; }
         public string Email { get; set; }
         public string Type { get; set; }
+        //public IFormFile ImageFile { get; set; }
     }
 }
