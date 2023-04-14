@@ -1,6 +1,7 @@
 using EcommAPI.Service.Category;
 using EcommAPI.Service.Image;
 using EcommAPI.Service.Module;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -13,6 +14,32 @@ builder.Services.AddCors(options =>
                     .AllowAnyHeader();
         });
 });
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        IConfigurationSection googleAuthNSection =
+        builder.Configuration.GetSection("Authentication:Google");
+        options.ClientId = googleAuthNSection["ClientId"];
+        options.ClientSecret = googleAuthNSection["ClientSecret"];
+    })
+    .AddFacebook(options =>
+ {
+     IConfigurationSection FBAuthNSection =
+     builder.Configuration.GetSection("Authentication:Facebook");
+     options.ClientId = FBAuthNSection["ClientId"];
+     options.ClientSecret = FBAuthNSection["ClientSecret"];
+ });
+   //.AddMicrosoftAccount(microsoftOptions =>
+   //{
+   //    microsoftOptions.ClientId = config["Authentication:Microsoft:ClientId"];
+   //    microsoftOptions.ClientSecret = config["Authentication:Microsoft:ClientSecret"];
+   //})
+   //.AddTwitter(twitterOptions =>
+   //{
+   //    twitterOptions.ConsumerKey = config["Authentication:Twitter:ConsumerAPIKey"];
+   //    twitterOptions.ConsumerSecret = config["Authentication:Twitter:ConsumerSecret"];
+   //    twitterOptions.RetrieveUserDetails = true;
+   //});
 builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -34,6 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowOrigin");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
