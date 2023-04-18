@@ -1,9 +1,14 @@
-﻿using EcommAPI.Model;
+﻿using DotNetOpenAuth.AspNet.Clients;
+using EcommAPI.Model;
 using EcommAPI.Service;
 using EcommAPI.Service.Category;
 using EcommAPI.Service.Image;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static DotNetOpenAuth.OpenId.Extensions.AttributeExchange.WellKnownAttributes.Contact;
+using System.Web;
+using System.Net;
 
 namespace EcommAPI.Controllers
 {
@@ -45,5 +50,7 @@ namespace EcommAPI.Controllers
                 throw ex;
             }
         }
+       
     }
 }
+

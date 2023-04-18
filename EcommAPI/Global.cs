@@ -6,7 +6,7 @@ namespace EcommAPI
 {
     public static class Global
     {
-
+        public static string path = "Image/uploads";
         #region UserType
         public static class UserType
         {
@@ -145,6 +145,43 @@ namespace EcommAPI
         }
         #endregion
 
+        public static bool SaveFile(IFormFile file,string imageFolder)
+        {
+            bool isSaved = false;
+            if (file != null)
+            {
+                if (file.Length > 0)
+                {
+                    //Getting FileName
+                    var fileName = Path.GetFileName(file.FileName);
 
+                    //Assigning Unique Filename (Guid)
+                    var myUniqueFileName = Convert.ToString(Guid.NewGuid());
+
+                    //Getting file Extension
+                    var fileExtension = Path.GetExtension(fileName);
+
+                    // concatenating  FileName + FileExtension
+                    var newFileName = String.Concat(myUniqueFileName, fileExtension);
+
+                    string contentPath = "";
+                    string filepath = Path.Combine(contentPath, imageFolder);
+                    if (!Directory.Exists(filepath))
+                    {
+                        Directory.CreateDirectory(filepath);
+                    }
+
+                    // Combines two strings into a path.
+                    var combineFilePath = filepath + newFileName;
+                    using (FileStream fs = System.IO.File.Create(combineFilePath))
+                    {
+                        file.CopyTo(fs);
+                        fs.Flush();
+                        isSaved = true;
+                    }
+                }
+            }
+            return isSaved;
+        }
     }
 }
