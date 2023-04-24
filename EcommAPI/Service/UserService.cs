@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Net;
 using System.Web;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EcommAPI.Service
 {
@@ -24,49 +25,67 @@ namespace EcommAPI.Service
         }
         public ResponseModel Login(LoginModel model)
         {
+            ResponseModel res = new ResponseModel();
             try
             {
-                ResponseModel res = new ResponseModel();
                 int err_no = 0;
                 var param = new List<SqlParameter>();
                 param.Add(new SqlParameter("@email", model.Email));
-                param.Add(new SqlParameter("@password", model.Password));
+                //param.Add(new SqlParameter("@password", model.Password));
                 param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));               
                 var result = Global.ExecuteStoredProcedure("sp_login_user", param, _unitOfWork.GetConnection());
                var dbResult = Global.CommonMethod.ConvertToList<LoginResponseModel>(result.Tables[0]).FirstOrDefault();
+                
                 if (dbResult!=null)
                 {
-                    res.status = true;
-                    res.response=dbResult;
+                    var decodedPassword = Global.ComputeSha256Hash(Global.EncryptToBase64(model.Password + dbResult.Salt));
+                    if(dbResult.Password != decodedPassword)
+                    {
+                        res.status = false;
+                        res.response = "Login Failed";
+                    }
+                    else
+                    {
+                        res.status = true;
+                        res.response = dbResult;
+                    }
                 }
                 else
                 {
                     res.status = false;
                     res.message = "Login failed";
                 }
-                return res;
             }
             catch (Exception ex)
             {
-                throw ex;
+                res.status = false;
+                res.message = ex.Message;
             }
+            return res;
         }
         public ResponseModel Register(UserModel model)
         {
             try
             {
-                string imagePath = Global.path + "/user";
-                var p=Global.SaveFile(model.ImageFile, imagePath);
-                ResponseModel response = new ResponseModel();
                 string err_msg = "";
                 int err_no = 0;
+                string imagePath = "";
                 var param = new List<SqlParameter>();
+                ResponseModel response = new ResponseModel();
+                if (model.ImageFile.Length>0)
+                {
+                    imagePath = Global.path + "/user";
+                    Global.SaveFile(model.ImageFile, imagePath);
+                }
+                string salt = Global.GenerateSalt();
+                string password = Global.ComputeSha256Hash(Global.EncryptToBase64(model.UserPassword + salt));
                 param.Add(new SqlParameter("@fullName", model.FullName));
-                param.Add(new SqlParameter("@password", model.UserPassword));
+                param.Add(new SqlParameter("@password", password));
                 param.Add(new SqlParameter("@email", model.Email));
                 param.Add(new SqlParameter("@Mobile", model.Mobile));
                 param.Add(new SqlParameter("@Image", imagePath));
                 param.Add(new SqlParameter("@type", model.Type));
+                param.Add(new SqlParameter("@salt", salt));
                 param.Add(new SqlParameter("@status", Global.Status.Open));
                 param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
                 param.Add(new SqlParameter("@errMsg", SqlDbType.VarChar, 200, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_msg));
@@ -219,5 +238,70 @@ namespace EcommAPI.Service
         }
         #endregion
 
+        #region Role
+        public ResponseModel GetAllRole()
+        {
+            try
+            {
+                ResponseModel res = new ResponseModel();
+                int err_no = 0;
+                var param = new List<SqlParameter>();
+                param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
+                var result = Global.ExecuteStoredProcedure("sp_get_role", param, _unitOfWork.GetConnection());
+                err_no = (int)param.Find(x => x.ParameterName == "@errNo")?.Value;
+                if (err_no == 0)
+                {
+                    res.status = true;
+                    var roleList = Global.CommonMethod.ConvertToList<RoleModel>(result.Tables[0]);
+                    int slNo = 1;
+                    roleList.ForEach(x => x.slNo = slNo++);
+                    res.response = roleList;
+
+                }
+                else
+                {
+                    res.status = false;
+                }
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public ResponseModel AddRole(RoleModel model)
+        {
+            try
+            {
+                ResponseModel response = new ResponseModel();
+                string err_msg = "";
+                int err_no = 0;
+                var param = new List<SqlParameter>();
+                param.Add(new SqlParameter("@roleId", model.RoleId));
+                param.Add(new SqlParameter("@RoleName", model.RoleName));
+                param.Add(new SqlParameter("@errNo", SqlDbType.Int, 4, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_no));
+                param.Add(new SqlParameter("@errMsg", SqlDbType.VarChar, 200, ParameterDirection.Output, true, 0, 0, null, DataRowVersion.Current, err_msg));
+                var result = Global.ExecuteStoredProcedure("sp_add_update_role", param, _unitOfWork.GetConnection());
+                err_no = (int)param.Find(x => x.ParameterName == "@errNo")?.Value;
+                err_msg = param.Find(x => x.ParameterName == "@errMsg")?.Value.ToString() ?? "";
+                if (err_no == 0)
+                {
+                    response.status = true;
+                    response.message = err_msg;
+                }
+                else
+                {
+                    response.status = false;
+                    response.message = err_msg;
+
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        #endregion
     }
 }

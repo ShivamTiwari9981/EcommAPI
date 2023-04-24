@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace EcommAPI
 {
@@ -15,7 +17,7 @@ namespace EcommAPI
         }
         #endregion
 
-        #region UserType
+        #region APIStatus
         public static class APIStatusCode
         {
             public static int Ok = 200;
@@ -28,7 +30,7 @@ namespace EcommAPI
         }
         #endregion
 
-        #region UserType
+        #region Status
         public static class Status
         {
             public static string Pending = "P";
@@ -182,6 +184,63 @@ namespace EcommAPI
                 }
             }
             return isSaved;
+        }
+        //Salt
+        public static string GenerateSalt()
+        {
+            int saltLength = 32;
+            byte[] salt = new byte[saltLength];
+            using (var random = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            {
+                random.GetNonZeroBytes(salt);
+            }
+            return Convert.ToBase64String(salt);
+        }
+
+        //Sha256 Hashing
+        public static string ComputeSha256Hash(string rawData)
+        {
+            // Create a SHA256   
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
+        //Sha512 Hashing
+        public static string ComputeSha512Hash(string rawData)
+        {
+            // Create a SHA512   
+            using (SHA512 sha512Hash = SHA512.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha512Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
+        //Base64 Encryption
+        public static string EncryptToBase64(string clearText)
+        {
+            var clearTextBytes = System.Text.Encoding.UTF8.GetBytes(clearText);
+            var cipherText = System.Convert.ToBase64String(clearTextBytes);
+            return cipherText;
         }
     }
 }
